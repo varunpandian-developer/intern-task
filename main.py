@@ -28,6 +28,18 @@ async def add_item(item: ItemCreate):
     finally:
         db.close()
 
+@app.post("/items/")
+async def add_item(item: ItemCreate):
+    db = SessionLocal()
+    try:
+        new_item = Item(name=item.name, description=item.description)
+        db.add(new_item)
+        db.commit()
+        db.refresh(new_item)
+        return new_item
+    finally:
+        db.close()
+        
 # Route to get an item by ID
 @app.get("/items/{item_id}")
 async def get_item(item_id: int):
